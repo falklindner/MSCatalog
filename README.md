@@ -81,6 +81,13 @@ Get-MSCatalogUpdate -Search "Cumulative Update for Windows Server 2016 (1803)" -
 **NOTE: This could cause a significant number of web requests. The catalog website will only provide 25 results at a time
 and this would just keep looping over all available results until it reaches the maximum of 1000.**
 
+In order to obtain more details for each patch, use the parameter `IncludeDetails`. For each search result, addtional details such as architecture, KB Article, MSRC references and supersedence information are parsed as well. Be aware that this increases the amount of requests by a factor of three. All details are avaible in the returned objects, but are not displayed by default.
+
+```powershell
+Get-MSCatalogUpdate -Search "Cumulative Update for Windows Server 2016 (1803)" -IncludeDetails
+```
+
+
 ## Save-MSCatalogUpdate
 
 This command is used to download update files from the [https://www.catalog.update.microsoft.com](https://www.catalog.update.microsoft.com)

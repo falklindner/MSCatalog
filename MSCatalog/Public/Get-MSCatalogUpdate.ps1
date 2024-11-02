@@ -27,6 +27,9 @@ function Get-MSCatalogUpdate {
         .PARAMETER ExcludePreview
         Exclude preview updates from the search results.
 
+        .PARAMETER IncludeDetails
+        Includes the details of the Updates, such as Description, Architecture, Classification, Supported products and languages, MSRC number, etc.
+
         .PARAMETER AllPages
         By default the Get-MSCatalogUpdate command returns the first page of results from catalog.update.micrsosoft.com, which is
         limited to 25 updates. If you specify this switch the command will instead return all pages of search results.
@@ -68,6 +71,9 @@ function Get-MSCatalogUpdate {
 
         [Parameter(Mandatory = $false)]
         [switch] $ExcludePreview,
+
+        [Parameter(Mandatory = $false)]
+        [switch] $IncludeDetails,
 
         [Parameter(Mandatory = $false)]
         [switch] $AllPages
@@ -155,7 +161,15 @@ function Get-MSCatalogUpdate {
         if ($Rows.Count -gt 0) {
             foreach ($Row in $Rows) {
                 if ($Row.Id -ne "headerRow") {
-                    [MSCatalogUpdate]::new($Row, $IncludeFileNames)
+                    if ($IncludeDetails) {
+
+                        Write-Progress -Activity "Parsing Updates from Catalog" -CurrentOperation $Row.Id
+                        [MSCatalogUpdateWithDetails]::new($Row, $IncludeFileNames)
+                    }
+                    else {
+                        [MSCatalogUpdate]::new($Row, $IncludeFileNames)
+                    }
+                    
                 }
             }
         } else {
